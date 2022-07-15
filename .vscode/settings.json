@@ -1,0 +1,11 @@
+{
+    "eslint.run": "onType",
+    "eslint.options": {
+        "overrideConfigFile": ".eslintrc.yml",
+        "extensions": [".js", ".ts", ".jsx", ".tsx"]
+    },
+    "editor.codeActionsOnSave": {
+        "source.fixAll": true
+    },
+    "eslint.alwaysShowStatus": true
+}
