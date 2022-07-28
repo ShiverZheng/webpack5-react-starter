@@ -4,6 +4,8 @@
 
 ```tree
 .
+├── .env.development                // 开发环境变量
+├── .env.production                 // 生产环境变量
 ├── .eslintrc.yml                   // ESLint
 ├── config                          // webpack 配置
 │   ├── webpack.config.js           // 公共webpack配置
@@ -35,3 +37,10 @@
 ├── .vscode                         // 工作区编辑器配置 自动格式化
 └── tsconfig.json                   // ts 配置
 ```
+
+## Scripts
+- `$ npm run dev` 
+> 启动开发环境
+
+- `$ npm run build:prod` 
+> 编译生产环境

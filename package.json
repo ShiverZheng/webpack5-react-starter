@@ -5,7 +5,6 @@
     "main": "index.js",
     "scripts": {
         "dev": "cross-env NODE_ENV=dev webpack serve --config ./config/webpack.config.js --mode=development",
-        "build:dev": "cross-env NODE_ENV=dev webpack --config ./config/webpack.config.js --mode=development",
         "build:prod": "cross-env NODE_ENV=dev webpack --config ./config/webpack.config.js --mode=production",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
