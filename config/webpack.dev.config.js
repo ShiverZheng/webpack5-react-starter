@@ -1,10 +1,18 @@
+const path = require('path')
+
 module.exports = {
     mode: 'development',
     devtool: 'cheap-module-source-map',
+    output: {
+        filename: 'static/js/[name].js',
+    },
     devServer: {
-        host: '0.0.0.0',
         port: '8888',
         hot: true,
-        open: true,
+        compress: true,
+        historyApiFallback: true,
+        static: {
+            directory: path.join(__dirname, 'public'),
+        },
     },
 }

@@ -81,3 +81,19 @@ rules:
   no-restricted-syntax: 'off'
   no-use-before-define: 'off'
   '@typescript-eslint/no-use-before-define': 'error'
+  react/jsx-sort-props:
+    - 1
+    - callbacksLast: true
+      shorthandFirst: true
+      noSortAlphabetically: true
+      multiline: 'last'
+  react/destructuring-assignment:
+    - 0
+  react/jsx-no-constructed-context-values:
+    - 0
+  consistent-return:
+    - 0
+  no-await-in-loop:
+    - 0
+  no-continue:
+    - 0

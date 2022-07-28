@@ -1,28 +1,43 @@
+const dotenv = require('dotenv')
+const webpack = require('webpack')
 const path = require('path')
 const autoprefixer = require('autoprefixer')
 const { merge } = require('webpack-merge')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const CssMinimizerWebpackPlugin = require('css-minimizer-webpack-plugin')
+
 const devConfig = require('./webpack.dev.config.js')
 const proConfig = require('./webpack.pro.config.js')
+
+let evnConfig = null
+
+if (process.env.NODE_ENV === 'production') {
+    evnConfig = dotenv.config({ path: path.resolve(__dirname, '../.env.production') })
+} else {
+    evnConfig = dotenv.config({ path: path.resolve(__dirname, '../.env.development') })
+}
 
 const config = {
     mode: 'production',
     entry: path.resolve(__dirname, '../src/index.tsx'),
     output: {
-        filename: 'static/js/[name].[contenthash:8].js',
         path: path.resolve(__dirname, '../build'),
         clean: true,
     },
     module: {
         rules: [
-            // 使用 less
+            {
+                test: /\.(jpe?g|png|gif|svg)$/i,
+                type: 'asset',
+            },
             {
                 test: /\.less$/i,
                 use: [
-                    MiniCssExtractPlugin.loader,
-                    'css-loader',
+                    {
+                        loader: 'style-loader',
+                    },
+                    {
+                        loader: 'css-loader',
+                    },
                     {
                         loader: 'postcss-loader',
                         options: {
@@ -34,7 +49,6 @@ const config = {
                     'less-loader',
                 ],
             },
-            // babel 转义ts
             {
                 test: /\.(js|mjs|jsx|ts|tsx)$/i,
                 include: path.resolve(__dirname, '../src'),
@@ -45,45 +59,43 @@ const config = {
                     },
                 },
             },
-            // 使用ts
             {
-                test: /\.ts$/i,
-                use: ['ts-loader'],
+                test: /\.tsx?$/,
+                use: [{
+                    loader:
+                    'ts-loader',
+                    options: {
+                        compilerOptions: { noEmit: false },
+                    },
+                }],
+                exclude: /node_modules/,
             },
         ],
     },
     plugins: [
-        // 将js引入html
         new HtmlWebpackPlugin({
-            template: path.resolve(__dirname, '../public/index.html'), // 输入index.html
+            template: path.resolve(__dirname, '../public/index.html'),
             // favicon: path.resolve(__dirname, '../public/favicon.ico'), // favicon图标
         }),
-        // 提取css
-        new MiniCssExtractPlugin({
-            filename: 'static/css/[name].[contenthash:8].css',
+        new webpack.DefinePlugin({
+            process: {
+                env: JSON.stringify(evnConfig.parsed),
+            },
         }),
     ],
-    optimization: {
-        minimizer: [
-            new CssMinimizerWebpackPlugin(),
-        ],
-    },
     resolve: {
-        // 使用别名
         alias: {
             '@': path.resolve(__dirname, '../src'),
+            public: path.resolve(__dirname, '../public'),
         },
-        // 使用扩展名
         extensions: ['.js', '.json', '.jsx', '.ts', '.tsx'],
     },
 }
 
 module.exports = (env, argv) => {
-    // 生产环境
     if (argv.mode === 'production') {
         return merge(config, proConfig)
     }
 
-    // 开发环境
     return merge(config, devConfig)
 }
